@@ -1,12 +1,13 @@
 # Zynq Custom Core Templates
-Complete examples of AXI-compatiable IP cores  ready for use in Xilinx Vivado/SDK. These cores are intended for use with the Zynq's Cortex-A9 PS and the MicroBlaze soft-processor. The core logic and AXI interface code is written in pure VHDL. The driver code is written in C and a self-test program is provided that is compatiable with the Standalone bare-metal Xilinx libraries. Linux compatiability has not been tested, but likely works fine. 
+Complete examples of AXI-compatiable IP cores  ready for use in Xilinx Vivado/SDK. These cores are intended for use with the Zynq's Cortex-A9 PS and the MicroBlaze soft-processor. The core logic and AXI interface code is written in pure VHDL. The driver code is written in C and a self-test program is provided that is compatiable with the Standalone bare-metal Xilinx libraries. Linux compatiability has not been tested, but likely works fine. These cores were developed under Vivado/SDK 2015.1
+
 
 ## Currently Complete:
 
 * AXI4-Lite
 
 
-## How to Use:
+## How to Implment:
 * Clone repo 
 * Open the Vivado project you want to use. Open `Tools -> Project Settings` Add the ip folder from the repo clone
 
@@ -36,7 +37,23 @@ Complete examples of AXI-compatiable IP cores  ready for use in Xilinx Vivado/SD
 
 ![Example_XDC](http://i.imgur.com/mFMMn8b.png?1)
 
+## How to Test
+* Open 'File -> Export -> Export Hardware' and export local to project and include the bitstream
+* Open 'File -> Launch SDK'
+* Create a new empty project and copy the following code into `main.c`
+
+```c
+#include "example_core_lite2.h"
+
+int main()
+{
+	EXAMPLE_CORE_LITE_SelfTest();
+	return 0;
+}
+```
 
 
+
+## How to Modify
 
 
