@@ -13,7 +13,7 @@ Complete examples of AXI-compatiable IP cores  ready for use in Xilinx Vivado/SD
 
 ![Import_IP](http://i.imgur.com/RByQq4M.png?1)
 
-* Open the your project's block diagram. Ensure your Zynq/MicroBlaze instance is correctly configured for your board.
+* Open the your project's block diagram. Ensure your Zynq/MicroBlaze instance is correctly configured for your board. **IMPORTANT** Make sure you have a UART available if you want to run the test suite later
 
 ![Init_BD](http://i.imgur.com/hGoZ7Tr.png?1)
  
@@ -29,7 +29,7 @@ Complete examples of AXI-compatiable IP cores  ready for use in Xilinx Vivado/SD
 
 ![Design_Automation_Run](http://i.imgur.com/NtvR6Tn.png?1)
 
-* Add import and output ports for the example core 
+* Add import and output ports for the example core. Validate your block diagram and save it. 
 
 ![Done_Block_Diagram](http://i.imgur.com/wVCgv45.png?1)
 
@@ -37,13 +37,39 @@ Complete examples of AXI-compatiable IP cores  ready for use in Xilinx Vivado/SD
 
 ![Example_XDC](http://i.imgur.com/mFMMn8b.png?1)
 
+* Run all implmentation steps including synthesis, place & route, and generate bit stream.
+
 ## How to Test
-* Open 'File -> Export -> Export Hardware' and export local to project and include the bitstream
-* Open 'File -> Launch SDK'
-* Create a new empty project and copy the following code into `main.c`
+* Within Vivado, Open `File -> Export -> Export Hardware` and select export **Local to Project** and include the bitstream
+
+![Export_Hardware](http://i.imgur.com/Ap9orzs.png)
+
+* Open `File -> Launch SDK` with both drop downs set **Local to Project**
+
+* Within SDK, check the Hardware Definition to Ensure the IP core is in the memory map
+
+![Hardware_Memory_Map](http://i.imgur.com/2VWCeVs.png)
+
+* Open `File -> New -> Board Support Package` to create a new standalone BSP based on the hardware defintion exported from Vivado
+
+![Create_BSP](http://i.imgur.com/TZcI6lG.png)
+
+* Ensure the example core is listed in the BSP with it's driver
+
+![Core_Driver](http://i.imgur.com/fc1jYPn.png)
+
+* Open `File -> New -> Application Project` and create a new, standalone C project based on the BSP you just created. Click `Next`
+
+![New_App_1](http://i.imgur.com/gqiJ80Y.png)
+
+* Select `Empty Application` from the available templates
+
+![New_App_2](http://i.imgur.com/SG4bli5.png)
+
+* Copy the following code into you new project `main.c`. The code should build automatically when you save, but if not selcect `Project -> Build All`
 
 ```c
-#include "example_core_lite2.h"
+#include "example_core_lite.h"
 
 int main()
 {
@@ -52,8 +78,34 @@ int main()
 }
 ```
 
+* Right click on the project and select `Run As -> Run Configurations...` Create a new **Xilinx C/C++ application (GDB)** instance for the project. Click `Apply` and then `Close`
+
+![Make_Run_Config](http://i.imgur.com/S4PRuDQ.png)
+
+* Ensure your favorite JTAG adaptor is hooked up and working. Select `Xilinx Tools -> Program FPGA` to load the BIT file from Vivado into your target device.
+
+![Program_FPGA](http://i.imgur.com/t9x4ARz.png)
+
+* Make sure your device's UART is connected via USB/Serial/etc. Open your favorite serial port terminal client and select the proper port and baudrate (should be 115200bps)
+
+* Execute the program run configuration you just created with the run button.
+
+![Run_Test](http://i.imgur.com/mIKiFib.png)
+
+* Verify the test ouput in your serial console. The only thing not exercised is the GPIO. 
+
+![Test_Result](http://i.imgur.com/oGzpaob.png)
+
 
 
 ## How to Modify
 
+The core can be modified at any time using the **IP Packager** in Vivado. Within the `IP Catalog` window, search for the core and right click on it to select the packager.
 
+![IP_Packager](http://i.imgur.com/0fozJKs.png) 
+
+
+The VHDL core is made up of three file:
+* `example_core.vhd` Module that defines the behavior of the core based on input and output registers 
+* `example_core_lite_v1_0_S00_AXI.vhd`  Defines the AXI bus interface as well as the input and output registers
+* `example_core_lite_v1_0.vhd` The top level module of the core than connect the main core logic to the AXI bus and the outside world
