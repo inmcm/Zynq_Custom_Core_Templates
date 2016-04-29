@@ -1,4 +1,4 @@
-# Zynq Custom Core Templates
+# Zynq/MicroBlaze AXI Custom Core Templates
 Complete examples of AXI-compatiable IP cores  ready for use in Xilinx Vivado/SDK. These cores are intended for use with the Zynq's Cortex-A9 PS and the MicroBlaze soft-processor. The core logic and AXI interface code is written in pure VHDL. The driver code is written in C and a self-test program is provided that is compatible with the Standalone bare-metal Xilinx libraries. Linux compatibility has not been tested, but likely works fine. These cores were developed under Vivado/SDK 2015.1
 
 
